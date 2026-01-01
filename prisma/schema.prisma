@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Assessment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  responses Json
+  result    RiskResult?
+}
+
+model RiskResult {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  assessmentId  String   @unique
+  score         Int
+  verdict       String
+  drivers       Json
+  translation   String
+  assessment    Assessment @relation(fields: [assessmentId], references: [id])
+}
+
+model Settings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
